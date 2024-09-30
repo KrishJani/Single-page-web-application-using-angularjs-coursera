@@ -4,7 +4,7 @@
     angular.module('NarrowItDownApp', [])
         .controller('NarrowItDownController', NarrowItDownController)
         .service('MenuSearchService', MenuSearchService)
-        .constant('ApiBasePath', "https://davids-restaurant.herokuapp.com")
+        .constant('ApiBasePath', "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json")
         .directive('foundItems', FoundItems);
 
     function FoundItems() {
