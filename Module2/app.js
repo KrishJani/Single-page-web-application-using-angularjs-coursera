@@ -1,56 +1,55 @@
 (function() {
     'use strict';
 
-    angular.module('ShoppingListManager', [])
-        .controller('ItemsToBuyController', ItemsToBuyController)
-        .controller('BoughtItemsController', BoughtItemsController)
-        .service('ShoppingService', ShoppingService);
+    angular.module('ShoppingListCheckOff', [])
+        .controller('ToBuyController', ToBuyController)
+        .controller('AlreadyBoughtController', AlreadyBoughtController)
+        .service('ShoppingListCheckOffService', ShoppingListCheckOffService);
 
-    ItemsToBuyController.$inject = ['ShoppingService'];
+    ToBuyController.$inject = ['ShoppingListCheckOffService'];
 
-    function ItemsToBuyController(ShoppingService) {
-        var buyCtrl = this;
+    function ToBuyController(ShoppingListCheckOffService) {
+        var toBuyList = this;
 
-        buyCtrl.items = ShoppingService.getPendingItems();
+        toBuyList.items = ShoppingListCheckOffService.getToBuyItems();
 
-        buyCtrl.purchaseItem = function(index) {
-            ShoppingService.purchaseItem(index);
+        toBuyList.buyItem = function(itemIndex) {
+            ShoppingListCheckOffService.buyItem(itemIndex);
         };
     }
 
-    BoughtItemsController.$inject = ['ShoppingService'];
+    AlreadyBoughtController.$inject = ['ShoppingListCheckOffService'];
 
-    function BoughtItemsController(ShoppingService) {
-        var boughtCtrl = this;
+    function AlreadyBoughtController(ShoppingListCheckOffService) {
+        var alreadyBougthList = this;
 
-        boughtCtrl.items = ShoppingService.getPurchasedItems();
+        alreadyBougthList.items = ShoppingListCheckOffService.getAlreadyBoughtItems();
     }
 
-    function ShoppingService() {
+    function ShoppingListCheckOffService() {
         var service = this;
-
-        var itemsToPurchase = [
+        var toBuyItems = [
             { name: "cookies", quantity: 10 },
             { name: "cokes", quantity: 2 },
             { name: "beers", quantity: 6 },
             { name: "apples", quantity: 4 },
             { name: "bananas", quantity: 7 }
         ];
+        var alreadyBoughtItems = [];
 
-        var purchasedItems = [];
+        service.buyItem = function(itemIndex) {
+            var item = toBuyItems[itemIndex];
 
-        service.purchaseItem = function(index) {
-            var item = itemsToPurchase[index];
-            purchasedItems.push(item);
-            itemsToPurchase.splice(index, 1);
+            alreadyBoughtItems.push(item);
+            toBuyItems.splice(itemIndex, 1);
         };
 
-        service.getPendingItems = function() {
-            return itemsToPurchase;
+        service.getToBuyItems = function() {
+            return toBuyItems;
         };
 
-        service.getPurchasedItems = function() {
-            return purchasedItems;
+        service.getAlreadyBoughtItems = function() {
+            return alreadyBoughtItems;
         };
     }
 })();
