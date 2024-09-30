@@ -60,10 +60,14 @@
         url: (ApiBasePath + "/menu_items.json")
     })
     .then(function(response) {
+        if (!response || !response.data) {
+            throw new Error('Invalid API response');
+        }
         var foundItems = [];
         
         // Iterate through each category (A, B, C, etc.)
         angular.forEach(response.data, function(category) {
+        if (category.menu_items) {
             // Iterate through the menu_items in each category
             angular.forEach(category.menu_items, function(item) {
                 // Check if searchTerm matches the item description
@@ -71,6 +75,7 @@
                     foundItems.push(item);
                 }
             });
+          }
         });
 
         return foundItems;
