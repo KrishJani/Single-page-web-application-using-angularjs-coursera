@@ -1,28 +1,32 @@
 (function() {
     'use strict';
 
-    angular.module('LunchChecker', [])
-        .controller('LunchCheckerController', LunchCheckerController);
+    angular.module('LunchCheck', [])
+        .controller('LunchCheckController', LunchCheckController);
 
-    LunchCheckerController.$inject = ['$scope'];
+    LunchCheckController.$inject = ['$scope'];
 
-    function LunchCheckerController($scope) {
-        $scope.foodItems = '';
-        $scope.responseMessage = '';
-        $scope.hasChecked = false;
+    function LunchCheckController($scope) {
+        $scope.dishes = '';
+        $scope.message = '';
+        $scope.checked = false;
 
-        $scope.evaluateLunch = function() {
-            if (!$scope.foodItems.trim()) {
-                $scope.isEmpty = true;
+        $scope.checkLunch = function() {
+            if ($scope.dishes.trim().length === 0) {
+                $scope.empty = true;
             } else {
-                $scope.hasChecked = true;
-                $scope.isEmpty = false;
-
-                var foodArray = $scope.foodItems.split(',').filter(function(item) {
-                    return item.trim() !== '';
+                $scope.checked = true;
+                $scope.empty = false;
+                var arrayDishes = $scope.dishes.split(',');
+                var arrayDishesWithoutEmptys = arrayDishes.filter(function(v) {
+                    return v.trim() !== '';
                 });
 
-                $scope.responseMessage = foodArray.length <= 3 ? 'Enjoy!' : 'Too much!';
+                if (arrayDishesWithoutEmptys.length <= 3) {
+                    $scope.message = 'Enjoy!';
+                } else {
+                    $scope.message = 'Too much!';
+                }
             }
         };
     }
