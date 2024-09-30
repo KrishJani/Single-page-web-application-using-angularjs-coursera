@@ -55,20 +55,30 @@
         var service = this;
 
         service.getMatchedMenuItems = function(searchTerm) {
-            return $http({
-                method: "GET",
-                url: (ApiBasePath + "/menu_items.json")
-            }).then(function(response) {
-                var foundItems = [];
-
-                for (var i = 0; i < response.data['menu_items'].length; i++) {
-                    if (searchTerm.length > 0 && response.data['menu_items'][i]['description'].toLowerCase().indexOf(searchTerm) !== -1) {
-                        foundItems.push(response.data['menu_items'][i]);
-                    }
+    return $http({
+        method: "GET",
+        url: (ApiBasePath + "/menu_items.json")
+    })
+    .then(function(response) {
+        var foundItems = [];
+        
+        // Iterate through each category (A, B, C, etc.)
+        angular.forEach(response.data, function(category) {
+            // Iterate through the menu_items in each category
+            angular.forEach(category.menu_items, function(item) {
+                // Check if searchTerm matches the item description
+                if (searchTerm.length > 0 && item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
+                    foundItems.push(item);
                 }
-
-                return foundItems;
             });
-        };
-    }
+        });
+
+        return foundItems;
+    })
+    .catch(function(error) {
+        console.error("Error occurred: ", error);
+        return [];
+    });
+};
+}
 })();
